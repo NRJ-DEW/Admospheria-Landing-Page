@@ -1,9 +1,3 @@
-```json
 {
-  "functions": {
-    "api/submit-lead.js": {
-      "maxDuration": 10
-    }
-  }
+  "$schema": "https://openapi.vercel.sh/vercel.json"
 }
-```
