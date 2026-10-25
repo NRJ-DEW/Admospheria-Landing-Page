@@ -1,7 +1,9 @@
+```json
 {
   "functions": {
     "api/submit-lead.js": {
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     }
   }
 }
+```
