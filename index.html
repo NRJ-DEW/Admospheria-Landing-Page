@@ -32,13 +32,15 @@ src="https://www.facebook.com/tr?id=2545073539326481&ev=PageView&noscript=1"
   box-sizing:border-box;
 }
 *{box-sizing:inherit;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px);
+  overflow-x:hidden;width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{
   background:var(--void); color:var(--white);
   font-family:'Manrope',sans-serif; line-height:1.6;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
-  overflow-x:hidden;
+  overflow-x:hidden;width:100%;max-width:100vw;position:relative;
 }
+button,a,input,select,textarea{touch-action:manipulation}
 h1,h2,h3{font-family:'Sora',sans-serif;font-weight:600;line-height:1.15;letter-spacing:-0.02em}
 .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
 .section{padding:44px 0}
@@ -310,7 +312,7 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 @media(max-width:620px){.casebook-grid{grid-template-columns:1fr}}
 .proof-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:stretch}
 /* CRM preview card — spreadsheet style */
-.crm-card{display:flex;flex-direction:column;justify-content:center;height:100%}
+.crm-card{display:flex;flex-direction:column;justify-content:center;height:100%;min-width:0}
 .crm-label{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
 .sheet-win{background:linear-gradient(165deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
   border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px 16px 14px;backdrop-filter:blur(10px)}
@@ -1560,6 +1562,52 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
 const WA_NUMBER='918602926446';
 const WA_MSG=encodeURIComponent("Hi Admospheria, I've just submitted my application for the 5-Day Performance Trial. I'd like to discuss my travel agency requirements.");
 const WA_LINK='https://wa.me/'+WA_NUMBER+'?text='+WA_MSG;
+
+/* ===== Backend integration (Google Apps Script CRM via Vercel proxy) ===== */
+const LEAD_API_ENDPOINT='/api/submit-lead';
+function genSubmissionId(){
+  try{if(window.crypto&&crypto.randomUUID)return crypto.randomUUID();}catch(e){}
+  return 'sub-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);
+}
+function readUTM(){
+  try{
+    const sp=new URLSearchParams(window.location.search);
+    return{
+      utmSource:sp.get('utm_source')||'',
+      utmMedium:sp.get('utm_medium')||'',
+      utmCampaign:sp.get('utm_campaign')||'',
+      utmContent:sp.get('utm_content')||'',
+      utmTerm:sp.get('utm_term')||''
+    };
+  }catch(e){return{utmSource:'',utmMedium:'',utmCampaign:'',utmContent:'',utmTerm:''};}
+}
+const UTM_PARAMS=readUTM();
+/**
+ * Sends a lead payload to the Apps Script CRM via our own /api/submit-lead
+ * proxy (keeps the request server-to-server so there's no CORS/redirect
+ * issue, and lets us read a real success/failure response).
+ * Returns {ok:boolean, data:object|null, error:string|null}
+ */
+async function submitLead(payload,opts){
+  opts=opts||{};
+  try{
+    const res=await fetch(LEAD_API_ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),
+      keepalive:!!opts.keepalive
+    });
+    let data=null;
+    try{data=await res.json();}catch(e){}
+    if(res.ok&&data&&data.ok===true){
+      return{ok:true,data:data,error:null};
+    }
+    const msg=(data&&data.message)?data.message:('Backend returned status '+res.status);
+    return{ok:false,data:data,error:msg};
+  }catch(err){
+    return{ok:false,data:null,error:(err&&err.message)?err.message:'Network error while submitting.'};
+  }
+}
 const qualSteps=[
  {q:"Do you own or manage a travel agency?",type:'choice',opts:["Yes, I own a travel agency.","I manage a travel agency.","No, I have another business."],disq:2},
  {q:"Have you previously run Meta (Facebook & Instagram) Ads for your travel agency?",type:'choice',opts:["Yes, with an agency.","Yes, I ran ads myself.","No, first time."],disq:2},
@@ -1576,7 +1624,7 @@ const qualSteps=[
 const INDIA_STATES=["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli and Daman and Diu","Delhi (NCT)","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"];
 let answers={};
 let qStep=0;
-function openQual(){qStep=0;answers={};document.getElementById('qualModal').classList.add('open');document.getElementById('qualCloseBtn').style.display='';showNotice();if(typeof fbq==='function')fbq('track','InitiateCheckout',{content_name:'5-Day Trial Application'});}
+function openQual(){qStep=0;answers={};answers.submissionId=genSubmissionId();document.getElementById('qualModal').classList.add('open');document.getElementById('qualCloseBtn').style.display='';showNotice();if(typeof fbq==='function')fbq('track','InitiateCheckout',{content_name:'5-Day Trial Application'});}
 function showNotice(){
   setProgress(0);
   const body=document.getElementById('qualBody');
@@ -1713,6 +1761,7 @@ function checkContactForm(){
 function checkConsent(){
   const boxes=document.querySelectorAll('#qualBody input[data-c]');
   const btn=document.getElementById('submitBtn');
+  boxes.forEach(b=>{answers['consent'+(Number(b.dataset.c)+1)]=b.checked});
   if(!btn)return;
   let all=boxes.length>0;
   boxes.forEach(b=>{if(!b.checked)all=false});
@@ -1720,28 +1769,77 @@ function checkConsent(){
 }
 function continueAgencyInfo(){qStep++;renderQual()}
 function continueContactInfo(){qStep++;renderQual()}
-function submitFinal(){
+let isSubmitting=false;
+function buildQualifiedPayload(){
+  return{
+    submissionId:answers.submissionId||genSubmissionId(),
+    q1:answers.q1||'',q2:answers.q2||'',q3:answers.q3||'',q4:answers.q4||'',
+    q5:answers.q5||'',q6:answers.q6||'',q7:answers.q7||'',q8:answers.q8||'',
+    agencyName:answers.agencyName||'',website:answers.website||'',
+    instagram:answers.instagram||'',businessEmail:answers.email||'',
+    ownerName:answers.ownerName||'',whatsapp:answers.whatsapp||'',
+    city:answers.city||'',state:answers.state||'',
+    consent1:!!answers.consent1,consent2:!!answers.consent2,consent3:!!answers.consent3,
+    consent4:!!answers.consent4,consent5:!!answers.consent5,
+    utmSource:UTM_PARAMS.utmSource,utmMedium:UTM_PARAMS.utmMedium,utmCampaign:UTM_PARAMS.utmCampaign,
+    utmContent:UTM_PARAMS.utmContent,utmTerm:UTM_PARAMS.utmTerm,
+    landingPageUrl:window.location.href
+  };
+}
+function buildRejectedPayload(uptoQNum){
+  const p={submissionId:answers.submissionId||genSubmissionId()};
+  for(let n=1;n<=uptoQNum;n++)p['q'+n]=answers['q'+n]||'';
+  return p;
+}
+async function submitFinal(){
+  if(isSubmitting)return;
+  isSubmitting=true;
   const btn=document.getElementById('submitBtn');
   const back=document.querySelector('#qualBody .qual-back');
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Submitting your application...';}
   if(back)back.disabled=true;
   if(typeof fbq==='function')fbq('track','SubmitApplication',{content_name:'5-Day Trial Application'});
-  setTimeout(showThanks,1600);
+  const result=await submitLead(buildQualifiedPayload());
+  isSubmitting=false;
+  if(result.ok){
+    showThanks();
+  }else if(result.data&&result.data.duplicate){
+    showSubmitDuplicate_();
+  }else{
+    showSubmitError_(result.error);
+  }
+}
+function showSubmitError_(message){
+  document.getElementById('qualBody').innerHTML='<div class="qual-end bad"><div class="icon">&#9888;&#65039;</div>'+
+    '<h3>We couldn\'t submit your application.</h3>'+
+    '<p class="muted" style="font-size:14px;margin-bottom:10px">'+(message?message:'Something went wrong while sending your details to our team.')+'</p>'+
+    '<p class="muted" style="font-size:14px;margin-bottom:22px">Your answers are still saved — please check your internet connection and try again.</p>'+
+    '<button class="btn-gold" id="submitBtn" style="width:100%;justify-content:center;margin-bottom:10px" onclick="submitFinal()">Try Again <span class="arrow">&#8635;</span></button>'+
+    '</div>';
+}
+function showSubmitDuplicate_(){
+  document.getElementById('qualBody').innerHTML='<div class="qual-end good"><div class="icon">&#8505;&#65039;</div>'+
+    '<h3>You\'ve already applied.</h3>'+
+    '<p class="muted" style="font-size:14px;margin-bottom:22px">We already have a recent application from this WhatsApp number and agency. Our team will reach out soon — no need to submit again.</p>'+
+    '<button class="btn-ghost" style="width:100%;justify-content:center" onclick="closeQual()">Close</button></div>';
 }
 function answerChoice(i){
   const s=qualSteps[qStep];
-  if(s.disq===i){showDisqualified();return}
+  const qNum=qStep+1;
+  answers['q'+qNum]=s.opts[i];
+  if(s.disq===i){showDisqualified(qNum);return}
   qStep++;
   if(qStep>=qualSteps.length){showThanks()}else{renderQual()}
 }
 function answerText(){
   const val=(answers.qtext&&answers.qtext[qStep])||'';
   if(!val.trim().length)return;
+  answers['q'+(qStep+1)]=val;
   qStep++;if(qStep>=qualSteps.length){showThanks()}else{renderQual()}
 }
 function submitQual(){showThanks()}
 function qualBack(){if(qStep>0){qStep--;renderQual()}}
-function showDisqualified(){
+function showDisqualified(qNum){
   setProgress(100);
   document.getElementById('qualCloseBtn').style.display='none';
   document.getElementById('qualBody').innerHTML='<div class="qual-end bad"><div class="icon">&#8987;</div>'+
@@ -1749,6 +1847,12 @@ function showDisqualified(){
     '<p class="muted" style="font-size:14px;margin-bottom:10px">Currently, our 5-Day Trial is available only for travel agencies that meet our minimum advertising budget requirement.</p>'+
     '<p class="muted" style="font-size:14px;margin-bottom:22px">We hope to work together when your business is ready to scale through Meta Ads.</p></div>';
   if(typeof fbq==='function')fbq('trackCustom','ApplicationDisqualified',{disqualified_at_step:qStep+1});
+  submitLead(buildRejectedPayload(qNum||(qStep+1)),{keepalive:true}).then(function(result){
+    if(!result.ok){
+      console.error('Rejected-lead sync to CRM failed:',result.error);
+      if(typeof fbq==='function')fbq('trackCustom','BackendSyncFailed',{stage:'rejected',disqualified_at_step:qNum||(qStep+1)});
+    }
+  });
 }
 function showThanks(){
   setProgress(100);
