@@ -827,7 +827,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
       <div class="badges">
         <span class="badge">5-day performance trial</span>
         <span class="badge">No service fee during trial</span>
-        <span class="badge">Min. ₹20,000 ad budget</span>
+        <span class="badge">Min. ₹15,000 ad budget</span>
       </div>
       <h1>Generate more <span class="grad-text">bookings</span>. Not just more leads.</h1>
       <p class="lead">We help Indian travel agencies generate qualified enquiries through Meta Ads — with a system that filters browsers out before they reach your inbox.</p>
@@ -1475,7 +1475,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
       <h2 style="font-size:24px">Apply for your 5-day trial</h2>
       <p class="muted" style="margin-top:8px;font-size:14.5px">8 quick questions — takes under 2 minutes. We'll tell you right away if your agency qualifies.</p>
       <button class="btn-gold" style="margin-top:22px;width:100%;justify-content:center" onclick="openQual()">Start application <span class="arrow">&#8594;</span></button>
-      <p class="muted" style="font-size:12.5px;margin-top:14px">One question per screen · disqualifies below ₹20,000 monthly budget</p>
+      <p class="muted" style="font-size:12.5px;margin-top:14px">One question per screen · disqualifies below ₹15,000 monthly budget</p>
     </div>
   </div>
 </section>
@@ -1486,8 +1486,8 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
     <details open><summary>What is the 5-Day Performance Trial?</summary><p>The 5-Day Performance Trial lets you experience our Meta Ads strategy and optimization process before committing to a long-term partnership. During the trial, we launch and optimize campaigns for your travel agency to generate qualified enquiries.</p></details>
     <details><summary>Is the trial really free?</summary><p>Yes. We do not charge any service fee during the 5-day trial. You only pay your Meta advertising budget directly to your own Meta Ad Account.</p></details>
     <details><summary>Do I pay the ad budget to Admospheria?</summary><p>No. Your advertising budget is paid directly to Meta from your own Ad Account. We only get partial access to manage and optimize your campaigns.</p></details>
-    <details><summary>Who is eligible for the trial?</summary><p>The trial is available only for Indian travel agencies that are ready to invest a minimum monthly Meta Ads budget of ₹20,000 and are genuinely looking to generate quality travel enquiries.</p></details>
-    <details><summary>What if my monthly ad budget is below ₹20,000?</summary><p>At the moment, we work only with agencies that meet our minimum advertising budget requirement because it allows us to properly test, optimize, and scale campaigns.</p></details>
+    <details><summary>Who is eligible for the trial?</summary><p>The trial is available only for Indian travel agencies that are ready to invest a minimum monthly Meta Ads budget of ₹15,000 and are genuinely looking to generate quality travel enquiries.</p></details>
+    <details><summary>What if my monthly ad budget is below ₹15,000?</summary><p>At the moment, we work only with agencies that meet our minimum advertising budget requirement because it allows us to properly test, optimize, and scale campaigns.</p></details>
     <details><summary>What types of travel agencies do you work with?</summary><p>We work with domestic and international travel agencies, honeymoon package providers, group tour operators, customized holiday planners, pilgrimage tour operators, and destination-specific travel businesses across India.</p></details>
     <details><summary>What happens after I submit my application?</summary><p>We review your application to understand your agency, destinations, and advertising readiness. If your agency qualifies, we'll contact you within 24-48 hours via Call or WhatsApp.</p></details>
     <details><summary>Will I receive genuine travel enquiries instead of random leads?</summary><p>Our landing page and qualification process are designed to filter low-quality enquiries before submission. While no campaign can guarantee only perfect leads, our focus is on generating higher-intent travel enquiries compared to basic forms.</p></details>
@@ -1613,8 +1613,8 @@ const qualSteps=[
  {q:"Have you previously run Meta (Facebook & Instagram) Ads for your travel agency?",type:'choice',opts:["Yes, with an agency.","Yes, I ran ads myself.","No, first time."],disq:2},
  {q:"What's the biggest challenge you're facing in generating travel enquiries?",type:'choice',opts:["Not getting enough quality enquiries.","Leads come in, but bookings are low.","High Cost Per Lead (CPL).","Ads are not delivering consistent results.","No clear marketing strategy or reporting.","Looking for an expert to scale our campaigns."]},
  {q:"What type of travel packages do you primarily sell?",type:'text',ph:"e.g. Domestic tours, honeymoon packages, international holidays..."},
- {q:"What's your monthly Meta Ads budget for lead generation?",type:'choice',opts:["Less than \u20b920,000","\u20b920,000 \u2013 \u20b930,000","\u20b930,000 \u2013 \u20b950,000","\u20b950,000 \u2013 \u20b91,00,000","\u20b91,00,000+"],disq:0,disqTag:true},
- {q:"If Admospheria generates quality travel enquiries, are you comfortable investing at least \u20b920,000/month in Meta Ads?",type:'choice',opts:["Yes, I'm ready.","I'd like to discuss it first.","No, my budget is below \u20b920K."],disq:2},
+ {q:"What's your monthly Meta Ads budget for lead generation?",type:'choice',opts:["Less than \u20b915,000","\u20b915,000 \u2013 \u20b930,000","\u20b930,000 \u2013 \u20b950,000","\u20b950,000 \u2013 \u20b91,00,000","\u20b91,00,000+"],disq:0,disqTag:true},
+ {q:"If Admospheria generates quality travel enquiries, are you comfortable investing at least \u20b915,000/month in Meta Ads?",type:'choice',opts:["Yes, I'm ready.","I'd like to discuss it first.","No, my budget is below \u20b920K."],disq:2},
  {q:"How many qualified travel enquiries would you like to generate every month?",type:'choice',opts:["25\u201350 qualified enquiries.","50\u2013100 qualified enquiries.","100\u2013200 qualified enquiries.","200+ qualified enquiries."]},
  {q:"This is a 5-Day Performance Trial. If you're satisfied with the quality of leads and our work, would you be open to continuing with Admospheria as your long-term Meta Ads partner?",type:'text',ph:"Type your answer here...",note:"Why we ask this: Our goal is to build long-term partnerships with travel agencies, not just run a one-time trial campaign."},
  {type:'agencyinfo',label:"Agency details",heading:"Tell Us a Little About Your Travel Agency"},
@@ -1631,7 +1631,7 @@ function showNotice(){
   const rows=[
     "No service fee during the 5-Day Trial.",
     "Trial Meta Ads budget: \u20b93,000\u2013\u20b94,000, paid directly by the client in their own Meta Ad Account.",
-    "Minimum Meta Ads budget to continue: \u20b920,000/month.",
+    "Minimum Meta Ads budget to continue: \u20b915,000/month.",
     "Application takes about 2 minutes."
   ];
   const rowsHtml=rows.map((t,i)=>'<li><span class="tfnum">'+(i+1)+'</span><span>'+t+'</span></li>').join('');
@@ -1688,7 +1688,7 @@ function renderQual(){
       '<button class="btn-gold" id="contactContinueBtn" style="justify-content:center;flex:1" onclick="continueContactInfo()" disabled>Continue <span class="arrow">&#8594;</span></button></div>';
   }else if(s.type==='finalconsent'){
     const items=[
-      "I confirm that my travel agency has a minimum Meta Ads advertising budget of \u20b920,000 per month.",
+      "I confirm that my travel agency has a minimum Meta Ads advertising budget of \u20b915,000 per month.",
       "I understand that this is a 5-Day Performance Trial with no service fee, and I'll only pay the Meta Ads budget in my own ad account during the trial.",
       "A minimum \u20b93,000\u2013\u20b94,000 Meta Ads budget is required to run the 5-Day Trial. This amount is paid directly by you through your own Meta Ad Account.",
       "I agree to discuss my business requirements with the Admospheria team via Call or WhatsApp.",
