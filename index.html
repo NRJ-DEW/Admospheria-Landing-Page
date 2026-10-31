@@ -19,9 +19,18 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=2545073539326481&ev=PageView&noscript=1"
 /></noscript>
+<script>
+try{if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}
+/* Force the very top of the page on every load, including back/forward-cache
+   restores (pageshow fires for those even when load/DOMContentLoaded won't),
+   so an ad click or any fresh visit always opens at the top. */
+window.addEventListener('pageshow',function(){window.scrollTo(0,0);});
+</script>
 <!-- End Meta Pixel Code -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Admospheria — Performance Marketing for Travel Agencies</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMkVFQkM2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzBCQzhBNyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTUiIGZpbGw9IiMwNDA4MEEiLz4KICA8cmVjdCB4PSIxLjUiIHk9IjEuNSIgd2lkdGg9IjYxIiBoZWlnaHQ9IjYxIiByeD0iMTMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utb3BhY2l0eT0iMC4zNSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8cGF0aCBkPSJNMzIgMTMgTDQ3IDQ2IEg0MC4yIEwzNy4yIDM5IEgyNi44IEwyMy44IDQ2IEgxNyBaIE0zMiAyMy41IEwyOC4yIDMzIEgzNS44IFoiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg==">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMkVFQkM2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzBCQzhBNyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTUiIGZpbGw9IiMwNDA4MEEiLz4KICA8cmVjdCB4PSIxLjUiIHk9IjEuNSIgd2lkdGg9IjYxIiBoZWlnaHQ9IjYxIiByeD0iMTMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utb3BhY2l0eT0iMC4zNSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8cGF0aCBkPSJNMzIgMTMgTDQ3IDQ2IEg0MC4yIEwzNy4yIDM5IEgyNi44IEwyMy44IDQ2IEgxNyBaIE0zMiAyMy41IEwyOC4yIDMzIEgzNS44IFoiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,16 +42,25 @@ src="https://www.facebook.com/tr?id=2545073539326481&ev=PageView&noscript=1"
 }
 *{box-sizing:inherit;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px);
-  overflow-x:hidden;width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{
   background:var(--void); color:var(--white);
   font-family:'Manrope',sans-serif; line-height:1.6;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
-  overflow-x:hidden;width:100%;max-width:100vw;position:relative;
+  overflow-x:clip;
 }
+/* Soft ambient glow across the full viewport width — keeps very wide/ultrawide
+   screens from reading as flat empty black on either side of the centered
+   content column. Fixed + pointer-events:none so it never affects layout,
+   scrolling or interaction. */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 900px 620px at 10% -8%,rgba(45,212,191,.065),transparent 60%),
+    radial-gradient(ellipse 900px 620px at 100% 22%,rgba(11,200,167,.055),transparent 60%),
+    radial-gradient(ellipse 760px 560px at 6% 92%,rgba(45,212,191,.05),transparent 62%)}
 button,a,input,select,textarea{touch-action:manipulation}
 h1,h2,h3{font-family:'Sora',sans-serif;font-weight:600;line-height:1.15;letter-spacing:-0.02em}
-.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 28px}
 .section{padding:44px 0}
 .grad-text{background:linear-gradient(90deg,var(--gold-l),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
 .eyebrow-none{display:none}
@@ -59,9 +77,10 @@ h1,h2,h3{font-family:'Sora',sans-serif;font-weight:600;line-height:1.15;letter-s
 /* nav */
 nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
 .stickyhead{position:sticky;top:0;z-index:50}
-.navrow{max-width:1120px;margin:0 auto;padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
+.navrow{max-width:1280px;margin:0 auto;padding:18px 28px 18px 18px;display:flex;justify-content:space-between;align-items:center}
 .logo{font-family:'Sora',sans-serif;font-size:20px;letter-spacing:-.01em}
 .logo span{color:var(--gold-l)}
+.brandmark{display:block;color:inherit;text-decoration:none;cursor:pointer}
 .navlinks{display:flex;gap:32px;font-size:14px;color:var(--grey)}
 .navlinks a{color:inherit;text-decoration:none}
 .btn-gold{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#231404;font-weight:700;
@@ -142,7 +161,8 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 
 /* section head */
 .shead{max-width:640px;margin:0 auto 36px;text-align:center}
-.shead h2{font-size:36px}
+.shead h2{font-size:clamp(23px,5.2vw,36px);line-height:1.22}
+#faq .shead h2{font-size:clamp(19px,4.4vw,30px);line-height:1.28}
 .shead p{color:var(--grey);margin-top:14px;font-size:16px}
 
 /* cards grid */
@@ -184,8 +204,25 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 .problem-card p{font-size:13.5px;color:var(--grey);line-height:1.55}
 @media(max-width:860px){.problems-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){
-  .problem-featured{flex-direction:column;align-items:flex-start;text-align:left;padding:30px 24px}
-  .problems-grid{grid-template-columns:1fr}
+  .problems-wrap{gap:14px}
+  .problem-featured{flex-direction:column;align-items:flex-start;text-align:left;padding:20px 18px;gap:12px}
+  .pf-icon{width:44px;height:44px;border-radius:13px}
+  .pf-icon svg{width:20px;height:20px}
+  .pf-eyebrow{font-size:11px;margin-bottom:6px}
+  .pf-body h3{font-size:17.5px;margin-bottom:7px;line-height:1.28}
+  .pf-body p{font-size:13.5px;line-height:1.5}
+  .problems-grid{grid-template-columns:1fr;gap:10px}
+  .problem-card{padding:16px 15px}
+  .pc-icon{width:30px;height:30px;border-radius:9px;margin-bottom:10px}
+  .pc-icon svg{width:15px;height:15px}
+  .problem-card h4{font-size:14px;margin-bottom:5px;line-height:1.3}
+  .problem-card p{font-size:12.5px;line-height:1.5}
+}
+@media(max-width:340px){
+  /* narrowest phones (iPhone SE etc.) — section headings were wrapping to 3 lines */
+  .shead h2{font-size:20px;line-height:1.28;letter-spacing:-.01em}
+  .pf-body h3{font-size:16.5px}
+  .problem-card{padding:14px 13px}
 }
 
 .obj-card{border-top:2px solid rgba(45,212,191,.45);transition:transform .25s,box-shadow .25s,border-color .25s}
@@ -324,7 +361,11 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 .fx-cell{font-weight:700;color:var(--cyan);background:rgba(45,212,191,.1);padding:2px 7px;border-radius:5px;flex:none}
 .fx-eq{font-style:italic;color:var(--grey);flex:none}
 .fx-val{color:var(--white);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sheet-scroll{overflow-x:auto}
+.sheet-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(45,212,191,.35) transparent;padding-bottom:4px}
+.sheet-scroll::-webkit-scrollbar{height:5px}
+.sheet-scroll::-webkit-scrollbar-track{background:transparent}
+.sheet-scroll::-webkit-scrollbar-thumb{background:rgba(45,212,191,.35);border-radius:6px}
+.sheet-scroll::-webkit-scrollbar-thumb:hover{background:rgba(45,212,191,.55)}
 .sheet-grid{min-width:540px}
 .sheet-colheads,.sheet-row{display:grid;grid-template-columns:26px .8fr 1.2fr .95fr .78fr 1.05fr}
 .shc{text-align:center;font-size:9.5px;color:var(--grey);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.08);
@@ -426,16 +467,19 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
   .jstep:not(:last-child)::after{content:'';position:absolute;left:27px;top:56px;bottom:-2px;width:2px;
     background:rgba(45,212,191,.22)}
   .proof-grid{grid-template-columns:1fr}
-  .camp-grid-v2{grid-template-columns:1fr}
-  .ads-gallery .ad-card{flex:0 0 160px}
+  .camp-grid-v2{grid-template-columns:1fr;gap:12px}
+  .ads-gallery{gap:10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .ads-gallery .ad-card{flex:0 0 130px;scroll-snap-align:start}
 }
 @media(max-width:480px){
-  .camp-stats-big{grid-template-columns:1fr}
+  .camp-stats-big{grid-template-columns:repeat(3,1fr);gap:6px}
 }
 
 /* compare */
 .cmp{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.cmprow{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14.5px}
+.cmprow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14.5px}
+.cmprow>span:first-child{color:var(--grey);font-weight:500}
+.cmprow>span:last-child{font-weight:700;text-align:right}
 .cmp .card.gold{border:1px solid rgba(200,148,63,.4)}
 .chk{color:#5DCAA5}
 .x{color:#94A3B8}
@@ -620,23 +664,77 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 .cj-dot.active{background:var(--gold-l);width:20px;border-radius:4px}
 
 @media(max-width:860px){
-  .cj-stage{padding:28px 20px}
-  .cj-create-grid{grid-template-columns:1fr}
-  .cj-adpreview{max-width:220px}
+  .cj-wrap{margin-bottom:36px}
+  .cj-nav{margin:24px 0 0}
+  .cj-stage{padding:22px 18px;margin-top:18px}
+  .cj-create-grid{display:flex;align-items:flex-start;gap:14px}
+  .cj-adpreview{max-width:138px;flex:0 0 138px;margin:0}
+  .cj-checklist-live{flex:1 1 auto;min-width:0;max-width:none}
   .cj-review-grid{grid-template-columns:1fr}
-  .cj-nav{overflow-x:auto;justify-content:flex-start;gap:24px;padding-bottom:4px;scrollbar-width:none}
+  .cj-nav{overflow-x:auto;justify-content:flex-start;gap:18px;padding-bottom:4px;scrollbar-width:none}
   .cj-nav::-webkit-scrollbar{display:none}
-  .cj-navitem{flex:0 0 auto;min-width:62px}
-  .cj-rail{left:0;right:0}
+  .cj-navitem{flex:0 0 auto;min-width:54px}
+  .cj-navicon{width:38px;height:38px}
+  .cj-navicon svg{width:16px;height:16px}
+  .cj-navlabel{font-size:10.5px}
+  .cj-rail{top:19px;left:0;right:0}
   .cj-trust{flex-direction:column;text-align:center}
-  .cj-panel h3{font-size:21px}
+  .cj-panel-top{margin-bottom:8px;gap:8px}
+  .cj-panel h3{font-size:19px;margin-bottom:8px}
+  .cj-desc{font-size:13.5px;margin-bottom:16px}
+  .cj-chips{gap:8px}
+  .cj-chip{padding:9px 12px;font-size:12.5px;gap:7px}
+  .cj-checklist{gap:7px}
+  .cj-check-row{padding:10px 12px}
+  .cj-controls{margin-top:16px;padding-top:14px}
+  .cj-ctrl-btn{padding:12px 16px;font-size:13px}
   .cj-dots{order:0}
 }
 @media(max-width:480px){
+  .cj-wrap{margin-bottom:28px}
+  .cj-nav{margin:18px 0 0;gap:14px}
+  .cj-navitem{min-width:46px}
+  .cj-navicon{width:32px;height:32px}
+  .cj-navicon svg{width:14px;height:14px}
+  .cj-navlabel{font-size:9.5px}
+  .cj-rail{top:16px}
   .cj-day-track{gap:6px}
   .cj-day{padding:10px 4px}
   .cj-day-num{font-size:9.5px}
   .cj-day-label{font-size:9.5px}
+  .cj-stage{padding:16px 14px;margin-top:14px}
+  .cj-panel h3{font-size:17px}
+  .cj-smalllabel{font-size:10.5px}
+  .cj-create-grid{gap:8px}
+  .cj-adpreview{max-width:128px;flex:0 0 128px}
+  .cj-edit-tools{left:7px;top:40px;gap:6px}
+  .cj-edit-tool{width:21px;height:21px}
+  .cj-edit-tool svg{width:11px;height:11px}
+  .cj-edit-badge{font-size:9.5px;padding:3px 6px}
+  .cj-edit-badge svg{width:9px;height:9px}
+  .cj-timeline-ruler{font-size:8px}
+  .cj-check-row{padding:7px 8px}
+  .cj-check-row .label{font-size:10.5px}
+  .cj-check-status{font-size:9.5px;gap:3px}
+  .cj-check-status svg{width:11px;height:11px}
+  .cj-checklist{gap:5px}
+  .cj-checklist-live .cj-check-row{flex-wrap:nowrap;gap:4px}
+  .cj-checklist-live .cj-check-row .label{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9.5px}
+  .cj-checklist-live .cj-check-status{flex:0 0 auto;white-space:nowrap;font-size:8.5px;gap:2px}
+  .cj-checklist-live .cj-check-status svg{width:9px;height:9px}
+  .cj-controls{margin-top:14px;padding-top:12px}
+  .cj-ctrl-btn{padding:11px 13px;font-size:12.5px}
+  .cj-stagenum{font-size:11px}
+}
+@media(max-width:360px){
+  /* On the narrowest phones the full-size reel preview doesn't leave enough
+     room for the checklist labels to stay on one line next to "Ready" — ease
+     the reel back just slightly here only, so Ready can stay pinned right
+     without truncating the label text. */
+  .cj-adpreview{max-width:100px;flex:0 0 100px}
+  .cj-edit-tools{left:6px;top:28px;gap:4px}
+  .cj-edit-tool{width:17px;height:17px}
+  .cj-edit-tool svg{width:9px;height:9px}
 }
 
 /* form cta */
@@ -669,10 +767,18 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
 
 @media(max-width:860px){
   .dgrid .dcard{flex:0 0 150px}
+  .dgrid{scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .dgrid .dcard{scroll-snap-align:start}
   .section{padding:32px 0}
   .hero-grid{grid-template-columns:1fr}
   .hero h1{font-size:36px}
   .stats,.grid3,.kpi,.grid2x3,.grid4{grid-template-columns:repeat(2,1fr)}
+  #results .grid2x3{display:flex;flex-wrap:wrap;justify-content:center}
+  #results .grid2x3 .snap-card{flex:0 0 calc(50% - 8px)}
+  .stat{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 14px;min-height:148px}
+  .stat .l{line-height:1.35}
+  .stat .n{font-size:28px}
+  .stat .l{font-size:12px}
   .tf-spacer{grid-column:1/-1}
   .dgrid{grid-template-columns:repeat(3,1fr)}
   .tl{grid-template-columns:1fr}
@@ -681,18 +787,80 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
   .ftop{grid-template-columns:1fr;gap:28px}
   .spotlight{padding:32px 18px}
   .navlinks{display:none}
+  .navrow{padding:14px 16px 14px 14px;gap:10px}
+  .brandmark{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1 1 auto}
+  .logo{font-size:20.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brandsub{font-size:11.5px;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .btn-nav-cta{padding:9px 14px;font-size:12.5px;flex:0 0 auto;white-space:nowrap;gap:0}
   .stickycta{display:flex;position:fixed;left:0;right:0;bottom:0;padding:14px 16px;
     padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
     background:rgba(3,7,18,.94);backdrop-filter:blur(14px);z-index:59;
     border-top:2px solid transparent;
     border-image:linear-gradient(90deg,var(--cyan),var(--gold-l)) 1}
   .stickycta .btn-gold{width:100%;justify-content:center}
+
+  /* section headings — font-size is fluid via clamp() on the base rule now */
+  .shead p{font-size:14.5px}
+
+  /* comparison table — tighter, cleaner rows on mobile */
+  .cmp{gap:12px}
+  .cmp .card.glass{padding:16px}
+  .cmp h3{font-size:14.5px;margin-bottom:2px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1)}
+  .cmprow{padding:10px 0;font-size:13.5px;gap:8px}
+  .cmprow>span:first-child{font-size:12.5px}
+
+  /* campaign performance cards — less bulky on mobile */
+  .camp-card{padding:20px 16px}
+  .camp-card h4{font-size:15px;margin-bottom:12px}
+  .camp-stats-big{gap:7px}
+  .cbig{padding:9px 4px}
+  .cbig .cn{font-size:13.5px}
+  .cbig .cl{font-size:8.5px}
+
+  /* reel + destination carousels — show ~3 cards per screen instead of ~2 */
+  .ads-gallery .ad-card{flex:0 0 112px;border-radius:12px}
+  .ad-card .ic{font-size:18px}
+  .ad-card span{font-size:11px}
+  .play-badge{width:34px;height:34px;font-size:13px}
+  .mute-btn{width:24px;height:24px;font-size:11px;top:7px;right:7px}
+  .reel-label{font-size:11px;bottom:8px;left:9px;max-width:calc(100% - 18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dgrid .dcard{flex:0 0 112px}
+  .dcard{padding:10px;font-size:12.5px;border-radius:12px}
+  .darrow{width:34px;height:34px;font-size:16px}
+  .darrow.left{left:2px}
+  .darrow.right{right:2px}
+}
+@media(max-width:480px){
+  .shead p{font-size:13.5px}
+  .cmp{gap:10px}
+  .cmp .card.glass{padding:14px}
+  .cmprow{padding:8px 0;font-size:12.5px}
+  .cmprow>span:first-child{font-size:11.5px}
+  .navrow{padding:12px 14px 12px 12px;gap:8px}
+  .logo{font-size:19px}
+  .brandsub{font-size:10.5px}
+  .btn-nav-cta{padding:10px 12px;font-size:11.5px}
+  .camp-card h4{font-size:14px;margin-bottom:10px}
+  .camp-stats-big{margin-bottom:12px}
+  .camp-proof-btn{font-size:12px;margin-top:10px}
+  /* reels — fit ~3 cards across a narrow phone screen */
+  .ads-gallery{gap:8px}
+  .ads-gallery .ad-card{flex:0 0 96px}
+  .play-badge{width:28px;height:28px;font-size:11px}
+  .mute-btn{width:20px;height:20px;font-size:9.5px;top:6px;right:6px}
+  .reel-label{font-size:10px;bottom:7px;left:8px;max-width:calc(100% - 14px)}
+  /* destinations — show 3 full cards + an intentional partial 4th peeking in */
+  .dgrid{gap:10px}
+  .dgrid .dcard{flex:0 0 27%}
 }
 
 /* modals */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,7,10,.75);backdrop-filter:blur(6px);
   z-index:100;align-items:center;justify-content:center;padding:24px}
 .modal-overlay.open{display:flex}
+/* lock the page behind an open modal — stops background scroll on both
+   desktop (wheel/trackpad) and mobile (touch-drag, including iOS rubber-band) */
+body.no-scroll{position:fixed;left:0;right:0;overflow:hidden}
 .modal{background:var(--navy);border:1px solid rgba(255,255,255,.1);border-radius:18px;max-width:560px;width:100%;
   max-height:86vh;overflow:hidden;display:flex;flex-direction:column}
 .resultsbox{max-width:920px}
@@ -806,13 +974,13 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
 <body>
 
 <div class="stickyhead">
-<div class="topbar">Try the <b>5-Day Performance Trial</b> risk-free — don't love the leads? Simply don't continue. No pressure, no lock-in, no questions asked.</div>
+<div class="topbar">Try the <b>5-Day Performance Trial</b> risk-free — don't love the leads? Simply don't continue. No questions asked.</div>
 <nav>
   <div class="navrow">
-    <div class="brandmark">
+    <a href="#" class="brandmark" onclick="window.location.reload();return false;" aria-label="Admospheria — reload page">
       <div class="logo">Admo<span>sphere</span>ia</div>
       <div class="brandsub">Performance Marketing Agency</div>
-    </div>
+    </a>
     <div class="navlinks">
       <a href="#solution">Solution</a><a href="#results">Results</a><a href="#trial">Trial</a><a href="#faq">FAQ</a>
     </div>
@@ -886,7 +1054,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
       <div class="stat"><div class="n">₹50L+</div><div class="l">Meta ad spend managed</div></div>
       <div class="stat"><div class="n">70+</div><div class="l">Businesses managed</div></div>
       <div class="stat"><div class="n">85%</div><div class="l">Client Retention Rate</div></div>
-      <div class="stat"><div class="n">5+ Years</div><div class="l">of Experience</div></div>
+      <div class="stat"><div class="n">5+</div><div class="l">Years of Experience</div></div>
     </div>
   </div>
 </section>
@@ -1310,7 +1478,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
   <div class="wrap">
     <div class="cj-wrap">
       <div class="center" style="margin-bottom:16px"><span class="tag" style="margin-left:0">The Client Journey</span></div>
-      <h2 class="center" style="font-size:32px">From First Conversation to Long-Term Growth</h2>
+      <h2 class="center" style="font-size:clamp(22px,5vw,32px);line-height:1.22">From First Conversation to Long-Term Growth</h2>
       <p class="center muted" style="max-width:580px;margin:14px auto 0">Here's exactly how we take your travel agency from the first meeting to a live 5-day trial — and potentially a long-term growth partnership.</p>
 
       <div class="cj-nav" id="cjNav" aria-label="Client journey stages">
@@ -1392,9 +1560,9 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
               </div>
             </div>
             <div class="cj-checklist cj-checklist-live">
-              <div class="cj-check-row"><span class="label">Creative Concept</span><span class="cj-check-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Ready</span></div>
-              <div class="cj-check-row"><span class="label">Campaign Structure</span><span class="cj-check-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Ready</span></div>
-              <div class="cj-check-row"><span class="label">Targeting Defined</span><span class="cj-check-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Ready</span></div>
+              <div class="cj-check-row"><span class="label">Creative Concept</span><span class="cj-check-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="status-text">Ready</span></span></div>
+              <div class="cj-check-row"><span class="label">Campaign Structure</span><span class="cj-check-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="status-text">Ready</span></span></div>
+              <div class="cj-check-row"><span class="label">Targeting Defined</span><span class="cj-check-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="status-text">Ready</span></span></div>
             </div>
           </div>
         </div>
@@ -1472,7 +1640,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
       </div>
     </div>
     <div class="glass formcard twinkle-card">
-      <h2 style="font-size:24px">Apply for your 5-day trial</h2>
+      <h2 style="font-size:clamp(19px,4.6vw,24px)">Apply for your 5-day trial</h2>
       <p class="muted" style="margin-top:8px;font-size:14.5px">8 quick questions — takes under 2 minutes. We'll tell you right away if your agency qualifies.</p>
       <button class="btn-gold" style="margin-top:22px;width:100%;justify-content:center" onclick="openQual()">Start application <span class="arrow">&#8594;</span></button>
       <p class="muted" style="font-size:12.5px;margin-top:14px">One question per screen · disqualifies below ₹15,000 monthly budget</p>
@@ -1559,6 +1727,11 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
 </div>
 
 <script>
+/* Stop the browser from restoring the old scroll position after a reload —
+   without this, tapping the logo reloads the page but lands wherever the
+   user last scrolled to instead of the very top. */
+try{if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}
+window.scrollTo(0,0);
 const WA_NUMBER='918602926446';
 const WA_MSG=encodeURIComponent("Hi Admospheria, I've just submitted my application for the 5-Day Performance Trial. I'd like to discuss my travel agency requirements.");
 const WA_LINK='https://wa.me/'+WA_NUMBER+'?text='+WA_MSG;
@@ -1624,7 +1797,28 @@ const qualSteps=[
 const INDIA_STATES=["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli and Daman and Diu","Delhi (NCT)","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"];
 let answers={};
 let qStep=0;
-function openQual(){qStep=0;answers={};answers.submissionId=genSubmissionId();document.getElementById('qualModal').classList.add('open');document.getElementById('qualCloseBtn').style.display='';showNotice();if(typeof fbq==='function')fbq('track','InitiateCheckout',{content_name:'5-Day Trial Application'});}
+/* Background-scroll lock, shared by every modal. Uses a counter so that
+   opening one modal on top of another (e.g. the screenshot lightbox over
+   the results modal) doesn't unlock the page until the LAST one closes. */
+var _modalLockCount=0;
+var _modalLockScrollY=0;
+function lockBodyScroll(){
+  if(_modalLockCount===0){
+    _modalLockScrollY=window.scrollY||document.documentElement.scrollTop||0;
+    document.body.style.top=(-_modalLockScrollY)+'px';
+    document.body.classList.add('no-scroll');
+  }
+  _modalLockCount++;
+}
+function unlockBodyScroll(){
+  _modalLockCount=Math.max(0,_modalLockCount-1);
+  if(_modalLockCount===0){
+    document.body.classList.remove('no-scroll');
+    document.body.style.top='';
+    window.scrollTo(0,_modalLockScrollY);
+  }
+}
+function openQual(){qStep=0;answers={};answers.submissionId=genSubmissionId();document.getElementById('qualModal').classList.add('open');lockBodyScroll();document.getElementById('qualCloseBtn').style.display='';showNotice();if(typeof fbq==='function')fbq('track','InitiateCheckout',{content_name:'5-Day Trial Application'});}
 function showNotice(){
   setProgress(0);
   const body=document.getElementById('qualBody');
@@ -1650,7 +1844,7 @@ function checkNoticeBox(){
   if(btn&&box)btn.disabled=!box.checked;
 }
 function continueToQualification(){renderQual()}
-function closeQual(){document.getElementById('qualModal').classList.remove('open')}
+function closeQual(){document.getElementById('qualModal').classList.remove('open');unlockBodyScroll();}
 function setProgress(pct){document.getElementById('qualProgress').style.width=pct+'%'}
 function renderQual(){
   const total=qualSteps.length;
@@ -1915,20 +2109,21 @@ function toggleCampProof(btn){
   btn.classList.toggle('open',open);
   btn.innerHTML=open?'Hide Campaign Proof <span class="carr">&#8594;</span>':'View Campaign Proof <span class="carr">&#8594;</span>';
 }
-function openResults(){document.getElementById('resultsModal').classList.add('open');if(typeof fbq==='function')fbq('track','ViewContent',{content_name:'Campaign Results Gallery'});}
-function closeResults(){document.getElementById('resultsModal').classList.remove('open')}
+function openResults(){document.getElementById('resultsModal').classList.add('open');lockBodyScroll();if(typeof fbq==='function')fbq('track','ViewContent',{content_name:'Campaign Results Gallery'});}
+function closeResults(){document.getElementById('resultsModal').classList.remove('open');unlockBodyScroll();}
 function openShotLightbox(src,cap){
   document.getElementById('shotLightboxImg').src=src;
   document.getElementById('shotLightboxCap').textContent=cap||'';
   document.getElementById('shotLightbox').classList.add('open');
+  lockBodyScroll();
   if(typeof fbq==='function')fbq('trackCustom','ViewCampaignProof',{content_name:cap||src});
 }
-function closeShotLightbox(){document.getElementById('shotLightbox').classList.remove('open')}
+function closeShotLightbox(){document.getElementById('shotLightbox').classList.remove('open');unlockBodyScroll();}
 
 /* client journey */
 var cjIndex=0;
 var cjTotal=6;
-function cjGoTo(i){
+function cjGoTo(i,skipNavScroll){
   if(i<0||i>cjTotal-1)return;
   cjIndex=i;
   var navItems=document.querySelectorAll('.cj-navitem');
@@ -1947,8 +2142,13 @@ function cjGoTo(i){
   var nextBtn=document.getElementById('cjNextBtn');
   if(prevBtn)prevBtn.disabled=(i===0);
   if(nextBtn)nextBtn.disabled=(i===cjTotal-1);
-  if(navItems[i]&&navItems[i].scrollIntoView){
-    navItems[i].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  if(!skipNavScroll&&navItems[i]){
+    var navWrap=document.getElementById('cjNav');
+    if(navWrap&&navWrap.scrollWidth>navWrap.clientWidth){
+      var item=navItems[i];
+      var target=item.offsetLeft-(navWrap.clientWidth-item.offsetWidth)/2;
+      navWrap.scrollTo({left:Math.max(0,target),behavior:'smooth'});
+    }
   }
 }
 function cjPrev(){cjGoTo(cjIndex-1)}
@@ -1960,7 +2160,7 @@ if(cjNavEl){
     else if(e.key==='ArrowLeft'){e.preventDefault();cjGoTo(Math.max(cjIndex-1,0));var it2=document.querySelectorAll('.cj-navitem')[cjIndex];if(it2)it2.focus();}
   });
 }
-cjGoTo(0);
+cjGoTo(0,true);
 </script>
 
 </body>
