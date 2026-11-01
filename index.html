@@ -20,17 +20,34 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=2545073539326481&ev=PageView&noscript=1"
 /></noscript>
 <script>
-try{if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}
-/* Force the very top of the page on every load, including back/forward-cache
-   restores (pageshow fires for those even when load/DOMContentLoaded won't),
-   so an ad click or any fresh visit always opens at the top. */
-window.addEventListener('pageshow',function(){window.scrollTo(0,0);});
+/* Fresh visit, browser refresh/retry and logo tap all start at the very top.
+   Back/forward and tab restore keep the browser's normal behaviour.
+   Mobile browsers restore the old scroll position late (after layout/images),
+   so we re-apply "top" a few times until the visitor touches/scrolls. */
+try{
+  var _nav=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};
+  var _logoReload=sessionStorage.getItem('admoTop');
+  if(_logoReload)sessionStorage.removeItem('admoTop');
+  if(_nav.type==='navigate'||_nav.type==='reload'||_logoReload){
+    if('scrollRestoration' in history)history.scrollRestoration='manual';
+    var _stop=false,_goTop=function(){if(!_stop)window.scrollTo({top:0,left:0,behavior:'instant'});};
+    ['touchstart','wheel','keydown','mousedown'].forEach(function(ev){window.addEventListener(ev,function(){_stop=true;},{passive:true,once:true});});
+    _goTop();
+    document.addEventListener('DOMContentLoaded',_goTop);
+    window.addEventListener('load',_goTop);
+    [60,200,450,900,1500].forEach(function(t){setTimeout(_goTop,t);});
+  }
+}catch(e){}
 </script>
 <!-- End Meta Pixel Code -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Admospheria — Performance Marketing for Travel Agencies</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMkVFQkM2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzBCQzhBNyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTUiIGZpbGw9IiMwNDA4MEEiLz4KICA8cmVjdCB4PSIxLjUiIHk9IjEuNSIgd2lkdGg9IjYxIiBoZWlnaHQ9IjYxIiByeD0iMTMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utb3BhY2l0eT0iMC4zNSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8cGF0aCBkPSJNMzIgMTMgTDQ3IDQ2IEg0MC4yIEwzNy4yIDM5IEgyNi44IEwyMy44IDQ2IEgxNyBaIE0zMiAyMy41IEwyOC4yIDMzIEgzNS44IFoiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg==">
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMkVFQkM2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzBCQzhBNyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTUiIGZpbGw9IiMwNDA4MEEiLz4KICA8cmVjdCB4PSIxLjUiIHk9IjEuNSIgd2lkdGg9IjYxIiBoZWlnaHQ9IjYxIiByeD0iMTMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utb3BhY2l0eT0iMC4zNSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8cGF0aCBkPSJNMzIgMTMgTDQ3IDQ2IEg0MC4yIEwzNy4yIDM5IEgyNi44IEwyMy44IDQ2IEgxNyBaIE0zMiAyMy41IEwyOC4yIDMzIEgzNS44IFoiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg==">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#04080A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -91,7 +108,11 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 .btn-gold .arrow{transition:transform .2s}
 .btn-gold:hover .arrow{transform:translateX(3px)}
 @keyframes ctapulse{0%,100%{box-shadow:0 8px 30px rgba(11,200,167,.35)}50%{box-shadow:0 10px 40px rgba(11,200,167,.7)}}
-.btn-nav-cta{animation:ctapulse 2.2s ease-in-out infinite}
+.btn-nav-cta{animation:ctapulse 2.2s ease-in-out infinite;position:relative;overflow:hidden}
+.btn-nav-cta::after{content:'';position:absolute;top:-12px;right:-12px;width:38px;height:38px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.7),rgba(255,255,255,0) 70%);animation:ctacorner 2.6s ease-in-out infinite}
+@keyframes ctacorner{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:.85;transform:scale(1.1)}}
+@media(prefers-reduced-motion:reduce){.btn-nav-cta::after{animation:none;opacity:.5}}
 .twinkle-card{border:1.5px solid rgba(255,255,255,.6);animation:twinkle 2.1s ease-in-out infinite}
 @keyframes twinkle{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.45)}
   50%{box-shadow:0 0 22px 4px rgba(255,255,255,.5)}}
@@ -119,8 +140,8 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
   padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
 .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
 .badges{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 34px}
-.badge{font-size:12.5px;padding:7px 14px;border-radius:999px;border:1px solid rgba(200,148,63,.35);
-  background:rgba(200,148,63,.08);color:var(--gold-l)}
+.badge{font-size:12.5px;padding:7px 14px;border-radius:10px;border:1px solid rgba(45,212,191,.28);
+  background:rgba(45,212,191,.06);color:var(--gold-l);position:relative;overflow:hidden}
 .hero h1{font-size:52px;margin-bottom:22px}
 .hero h1 .grad-text{text-decoration:underline;text-decoration-style:wavy;text-decoration-color:rgba(45,212,191,.5);text-underline-offset:10px}
 .hero p.lead{font-size:17px;color:var(--grey);max-width:520px;margin-bottom:8px}
@@ -152,8 +173,8 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(93,202,165,.6)}70%{box-shadow:0 0 0 7px rgba(93,202,165,0)}100%{box-shadow:0 0 0 0 rgba(93,202,165,0)}}
 
 /* stat strip */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(45,212,191,.16);
+  border:1px solid rgba(45,212,191,.28);border-radius:20px;overflow:hidden}
 .stat{background:var(--navy);padding:38px 24px;text-align:center;transition:background .25s,transform .25s;cursor:default}
 .stat:hover{background:rgba(45,212,191,.07);transform:translateY(-3px)}
 .stat .n{font-family:'Sora',sans-serif;font-size:34px;color:var(--gold-l)}
@@ -162,7 +183,11 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 /* section head */
 .shead{max-width:640px;margin:0 auto 36px;text-align:center}
 .shead h2{font-size:clamp(23px,5.2vw,36px);line-height:1.22}
+.vs-hl{background:linear-gradient(90deg,#BFF5EA,#2DD4BF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;filter:drop-shadow(0 0 12px rgba(45,212,191,.25))}
+@media(max-width:860px){.vs-title{white-space:nowrap;font-size:min(30px,calc((100vw - 60px)/20))!important;letter-spacing:-.02em}}
 #faq .shead h2{font-size:clamp(19px,4.4vw,30px);line-height:1.28}
+@media(max-width:860px){#faq summary{font-size:14.5px}}
+@media(max-width:620px){#faq .shead h2{font-size:clamp(16px,5vw,26px)}}
 .shead p{color:var(--grey);margin-top:14px;font-size:16px}
 
 /* cards grid */
@@ -301,6 +326,14 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 .snap-card{text-align:center;padding:30px 18px}
 .snap-card .n{font-family:'Sora',sans-serif;font-size:32px;color:var(--gold-l)}
 .snap-card .l{font-size:12.5px;color:var(--grey);margin-top:8px;letter-spacing:.02em}
+#results .snap-card{position:relative;border-color:transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -2px 6px rgba(0,0,0,.35),0 10px 24px -8px rgba(0,0,0,.6),0 0 22px -6px rgba(45,212,191,.16);
+  transition:transform .25s,box-shadow .25s}
+#results .snap-card::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;
+  background:linear-gradient(145deg,rgba(94,234,212,.75),rgba(45,212,191,.12) 45%,rgba(45,212,191,.05) 60%,rgba(15,118,110,.55));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+#results .snap-card:hover{transform:translateY(-3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -2px 6px rgba(0,0,0,.35),0 16px 30px -8px rgba(0,0,0,.65),0 0 28px -4px rgba(45,212,191,.28)}
 .sample-chip{font-size:10px;color:var(--grey);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
   padding:3px 9px;border-radius:999px;letter-spacing:.03em;flex:none}
 /* casebook */
@@ -461,9 +494,11 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
 @media(max-width:860px){
   .journey-track{grid-template-columns:1fr;gap:0}
   .journey-track::before{display:none}
-  .jstep{display:flex;gap:16px;align-items:flex-start;text-align:left;position:relative;padding-bottom:30px}
-  .jstep:last-child{padding-bottom:0}
-  .jstep .jnum{margin:0;flex:none}
+  .jstep{display:grid;grid-template-columns:56px 1fr;grid-template-rows:auto auto;column-gap:18px;row-gap:0;align-content:center;text-align:left;position:relative;padding:0 0 30px;min-height:86px}
+  .jstep:last-child{padding-bottom:0;min-height:56px}
+  .jstep .jnum{margin:0;grid-row:1 / 3;grid-column:1;align-self:start}
+  .jstep h4{grid-column:2;grid-row:1;align-self:end;margin:0 0 3px;font-size:15px;line-height:1.3}
+  .jstep p{grid-column:2;grid-row:2;align-self:start;margin:0;font-size:12.5px;line-height:1.45}
   .jstep:not(:last-child)::after{content:'';position:absolute;left:27px;top:56px;bottom:-2px;width:2px;
     background:rgba(45,212,191,.22)}
   .proof-grid{grid-template-columns:1fr}
@@ -670,7 +705,13 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
   .cj-create-grid{display:flex;align-items:flex-start;gap:14px}
   .cj-adpreview{max-width:138px;flex:0 0 138px;margin:0}
   .cj-checklist-live{flex:1 1 auto;min-width:0;max-width:none}
-  .cj-review-grid{grid-template-columns:1fr}
+  .cj-review-grid{grid-template-columns:1fr;gap:8px;counter-reset:rv}
+  .cj-review-card{padding:10px 12px 10px 44px;position:relative;border-left:3px solid rgba(45,212,191,.55);counter-increment:rv}
+  .cj-review-card::before{content:counter(rv);position:absolute;left:11px;top:10px;width:22px;height:22px;border-radius:50%;
+    background:rgba(45,212,191,.14);border:1px solid rgba(45,212,191,.4);color:var(--cyan);font:700 11px/20px 'Sora',sans-serif;text-align:center}
+  .cj-review-card h4{font-size:13.5px;margin-bottom:3px;line-height:22px}
+  .cj-review-list{gap:3px}
+  .cj-review-item{font-size:11.5px;line-height:1.35}
   .cj-nav{overflow-x:auto;justify-content:flex-start;gap:18px;padding-bottom:4px;scrollbar-width:none}
   .cj-nav::-webkit-scrollbar{display:none}
   .cj-navitem{flex:0 0 auto;min-width:54px}
@@ -706,7 +747,7 @@ nav{background:rgba(3,4,6,.94);backdrop-filter:blur(16px);border-bottom:1px soli
   .cj-panel h3{font-size:17px}
   .cj-smalllabel{font-size:10.5px}
   .cj-create-grid{gap:8px}
-  .cj-adpreview{max-width:128px;flex:0 0 128px}
+  .cj-adpreview{max-width:212px;flex:0 0 clamp(128px,calc(100% - 166px),212px)}
   .cj-edit-tools{left:7px;top:40px;gap:6px}
   .cj-edit-tool{width:21px;height:21px}
   .cj-edit-tool svg{width:11px;height:11px}
@@ -791,7 +832,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
   .brandmark{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1 1 auto}
   .logo{font-size:20.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .brandsub{font-size:11.5px;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .btn-nav-cta{padding:9px 14px;font-size:12.5px;flex:0 0 auto;white-space:nowrap;gap:0}
+  .btn-nav-cta{padding:12px 17px;font-size:13.5px;flex:0 0 auto;white-space:nowrap;gap:0}
   .stickycta{display:flex;position:fixed;left:0;right:0;bottom:0;padding:14px 16px;
     padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
     background:rgba(3,7,18,.94);backdrop-filter:blur(14px);z-index:59;
@@ -839,19 +880,19 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:64px 0 32px}
   .navrow{padding:12px 14px 12px 12px;gap:8px}
   .logo{font-size:19px}
   .brandsub{font-size:10.5px}
-  .btn-nav-cta{padding:10px 12px;font-size:11.5px}
+  .btn-nav-cta{padding:11px 14px;font-size:12.5px}
   .camp-card h4{font-size:14px;margin-bottom:10px}
   .camp-stats-big{margin-bottom:12px}
   .camp-proof-btn{font-size:12px;margin-top:10px}
   /* reels — fit ~3 cards across a narrow phone screen */
   .ads-gallery{gap:8px}
-  .ads-gallery .ad-card{flex:0 0 96px}
+  .ads-gallery .ad-card{flex:0 0 clamp(92px,28.5%,128px)}
   .play-badge{width:28px;height:28px;font-size:11px}
   .mute-btn{width:20px;height:20px;font-size:9.5px;top:6px;right:6px}
   .reel-label{font-size:10px;bottom:7px;left:8px;max-width:calc(100% - 14px)}
   /* destinations — show 3 full cards + an intentional partial 4th peeking in */
   .dgrid{gap:10px}
-  .dgrid .dcard{flex:0 0 27%}
+  .dgrid .dcard{flex:0 0 clamp(92px,28.5%,128px)}
 }
 
 /* modals */
@@ -977,7 +1018,7 @@ body.no-scroll{position:fixed;left:0;right:0;overflow:hidden}
 <div class="topbar">Try the <b>5-Day Performance Trial</b> risk-free — don't love the leads? Simply don't continue. No questions asked.</div>
 <nav>
   <div class="navrow">
-    <a href="#" class="brandmark" onclick="window.location.reload();return false;" aria-label="Admospheria — reload page">
+    <a href="#" class="brandmark" onclick="return fullRefresh(event)" aria-label="Admospheria — reload page">
       <div class="logo">Admo<span>sphere</span>ia</div>
       <div class="brandsub">Performance Marketing Agency</div>
     </a>
@@ -1326,7 +1367,7 @@ body.no-scroll{position:fixed;left:0;right:0;overflow:hidden}
 
     <!-- 6. Verified campaign performance -->
     <div class="block-gap">
-      <div class="block-head"><h3>Verified Campaign Performance</h3><p>Actual campaign data from travel businesses we manage.</p></div>
+      <div class="block-head"><h3 class="vs-title vs-plain">Verified Campaign Performance</h3><p>Actual campaign data from travel businesses we manage.</p></div>
       <div class="camp-grid-v2">
         <div class="card glass camp-card">
           <h4>Himachal Tour Campaign</h4>
@@ -1435,7 +1476,7 @@ body.no-scroll{position:fixed;left:0;right:0;overflow:hidden}
 
 <section class="section" style="background:var(--navy)">
   <div class="wrap">
-    <div class="shead"><h2>Admospheria vs. generic agencies</h2></div>
+    <div class="shead"><h2 class="vs-title">Generic agencies vs <span class="vs-hl">Admospheria</span></h2></div>
     <div class="cmp">
       <div class="card glass">
         <h3 class="muted" style="font-weight:600">Generic agencies</h3>
@@ -1464,12 +1505,12 @@ body.no-scroll{position:fixed;left:0;right:0;overflow:hidden}
       <div class="tf arrow"><span class="tfnum">1</span><p>Business Manager setup</p></div>
       <div class="tf arrow"><span class="tfnum">2</span><p>Ad account setup</p></div>
       <div class="tf arrow"><span class="tfnum">3</span><p>Meta pixel setup</p></div>
-      <div class="tf"><span class="tfnum">4</span><p>Campaign structure and targeting</p></div>
+      <div class="tf"><span class="tfnum">4</span><p>Campaign Structure and targeting</p></div>
       <div class="tf-spacer"><span class="tf-down">&#8595;</span></div>
       <div class="tf arrow"><span class="tfnum">5</span><p>Facebook page setup</p></div>
       <div class="tf arrow"><span class="tfnum">6</span><p>Instagram page setup</p></div>
-      <div class="tf arrow"><span class="tfnum">7</span><p>1 professional ad creative, free</p></div>
-      <div class="tf"><span class="tfnum">8</span><p>Live campaign launch and monitoring</p></div>
+      <div class="tf arrow"><span class="tfnum">7</span><p>1 Professional Ad Creative/Reels <span style="white-space:nowrap">- Free</span></p></div>
+      <div class="tf"><span class="tfnum">8</span><p>Live Campaign Launch and monitoring</p></div>
     </div>
   </div>
 </section>
@@ -1587,24 +1628,24 @@ body.no-scroll{position:fixed;left:0;right:0;overflow:hidden}
         <div class="cj-panel" id="cjPanel4">
           <div class="cj-panel-top"><span class="cj-stagenum">Stage 05</span><span class="cj-smalllabel">Your decision, your choice</span></div>
           <h3>Review the Work. Then Decide.</h3>
-          <p class="cj-desc">At the end of the trial, we review actual campaign performance, enquiry relevance, execution and your feedback together. You decide whether you want to continue.</p>
+          <p class="cj-desc">On Day 5, we sit down with you and go through real numbers and real enquiries. Happy? We continue. Not convinced? You walk away. No pressure.</p>
           <div class="cj-review-grid">
-            <div class="cj-review-card"><h4>Campaign Performance</h4>
+            <div class="cj-review-card"><h4>Did it bring enquiries?</h4>
               <div class="cj-review-list">
-                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Spend vs. leads reviewed</div>
-                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Targeting assessed</div>
+                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Spend vs. leads, side by side</div>
+                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Targeting reviewed with you</div>
               </div>
             </div>
-            <div class="cj-review-card"><h4>Lead Relevance</h4>
+            <div class="cj-review-card"><h4>Were they the right customers?</h4>
               <div class="cj-review-list">
-                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Enquiry quality discussed</div>
+                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Enquiry quality, honestly discussed</div>
                 <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Package fit checked</div>
               </div>
             </div>
-            <div class="cj-review-card"><h4>Strategy &amp; Execution</h4>
+            <div class="cj-review-card"><h4>Do you trust the process?</h4>
               <div class="cj-review-list">
-                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Process walkthrough</div>
-                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Your feedback captured</div>
+                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Full walkthrough of what we did</div>
+                <div class="cj-review-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Your feedback shapes what's next</div>
               </div>
             </div>
           </div>
@@ -1669,7 +1710,7 @@ body.no-scroll{position:fixed;left:0;right:0;overflow:hidden}
   <div class="wrap">
     <div class="ftop">
       <div>
-        <div class="logo">Admo<span>sphere</span>ia</div>
+        <a href="#" class="brandmark" onclick="return fullRefresh(event)" aria-label="Admospheria — reload page"><div class="logo">Admo<span>sphere</span>ia</div></a>
         <p class="muted" style="margin-top:12px;font-size:13.5px;max-width:280px">Creating an atmosphere where brands grow through advertising.</p>
       </div>
       <div class="fcol">
@@ -1727,11 +1768,15 @@ body.no-scroll{position:fixed;left:0;right:0;overflow:hidden}
 </div>
 
 <script>
-/* Stop the browser from restoring the old scroll position after a reload —
-   without this, tapping the logo reloads the page but lands wherever the
-   user last scrolled to instead of the very top. */
-try{if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}
-window.scrollTo(0,0);
+function fullRefresh(e){
+  if(e&&e.preventDefault)e.preventDefault();
+  try{sessionStorage.setItem('admoTop','1')}catch(err){}
+  try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(err){}
+  var u=window.location.href.split('#')[0];
+  try{window.location.replace(u);}catch(err){}
+  setTimeout(function(){window.location.reload();},150);
+  return false;
+}
 const WA_NUMBER='918602926446';
 const WA_MSG=encodeURIComponent("Hi Admospheria, I've just submitted my application for the 5-Day Performance Trial. I'd like to discuss my travel agency requirements.");
 const WA_LINK='https://wa.me/'+WA_NUMBER+'?text='+WA_MSG;
@@ -1815,7 +1860,7 @@ function unlockBodyScroll(){
   if(_modalLockCount===0){
     document.body.classList.remove('no-scroll');
     document.body.style.top='';
-    window.scrollTo(0,_modalLockScrollY);
+    window.scrollTo({top:_modalLockScrollY,left:0,behavior:'instant'});
   }
 }
 function openQual(){qStep=0;answers={};answers.submissionId=genSubmissionId();document.getElementById('qualModal').classList.add('open');lockBodyScroll();document.getElementById('qualCloseBtn').style.display='';showNotice();if(typeof fbq==='function')fbq('track','InitiateCheckout',{content_name:'5-Day Trial Application'});}
@@ -2161,6 +2206,27 @@ if(cjNavEl){
   });
 }
 cjGoTo(0,true);
+
+/* fit "Generic agencies vs Admospheria" on one line whatever font renders */
+(function(){
+  function fitVs(){
+    document.querySelectorAll('.vs-title').forEach(fitOne);}
+  function fitOne(h){
+    h.style.removeProperty('font-size');
+    if(window.innerWidth>860)return;
+    var avail=h.parentElement.clientWidth,r=document.createRange(),sz=13;
+    h.style.setProperty('font-size',sz+'px','important');
+    while(sz<30){
+      h.style.setProperty('font-size',(sz+.5)+'px','important');
+      r.selectNodeContents(h);
+      if(r.getBoundingClientRect().width>avail-4){h.style.setProperty('font-size',sz+'px','important');break;}
+      sz+=.5;
+    }
+  }
+  window.addEventListener('load',fitVs);window.addEventListener('resize',fitVs);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitVs);
+  document.addEventListener('DOMContentLoaded',fitVs);
+})();
 </script>
 
 </body>
